@@ -4,6 +4,7 @@ import numpy as np
 import math
 import time
 import os
+from PIL import Image, ImageDraw, ImageFont
 
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=2)
@@ -11,12 +12,16 @@ detector = HandDetector(maxHands=2)
 offset = 20
 imgSize = 300
 
-folder = "Data/Bangla"
+folder = "Data/na"
 counter = 0
 
 # Create the folder if it doesn't exist
 if not os.path.exists(folder):
     os.makedirs(folder)
+
+font_path = "NotoSansBengaliUI-Regular.ttf"  # Replace with the path to your Bangla font file
+font_size = 40
+font_color = (255, 255, 255)
 
 while True:
     success, img = cap.read()
@@ -52,7 +57,15 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     if key == ord("s"):
         counter += 1
-        cv2.imwrite(f'{folder}/Image_{time.time()}.jpg', imgWhite)
+        imgPil = Image.fromarray(imgWhite)
+        draw = ImageDraw.Draw(imgPil)
+        font = ImageFont.truetype(font_path, font_size)
+        text = f"Image_{time.time()}.jpg"
+        text_width, text_height = draw.textsize(text, font=font)
+        text_position = (10, 10)
+        draw.text(text_position, text, font=font, fill=font_color)
+        imgWhite = np.array(imgPil)
+        cv2.imwrite(f'{folder}/{text}', imgWhite)
         print(counter)
 
     if key == 27:  # Press Esc key to exit

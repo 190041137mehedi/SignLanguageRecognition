@@ -1,0 +1,33 @@
+CREATE TABLE Students(
+Student_ID INT,
+Name VARCHAR(50),
+Semester VARCHAR(10),
+No_of_course_taken INT,
+Department VARCHAR(50),
+constraint pk_Students PRIMARY KEY(Student_ID)
+);
+
+CREATE TABLE Department(
+Department_Code VARCHAR(10),
+Name VARCHAR(50),
+Head_of_dept VARCHAR(10),
+constraint pk_Department PRIMARY KEY(Department_Code)
+);
+
+
+CREATE TABLE Marksheet(
+Student_ID INT,
+Course VARCHAR(10),
+Grade VARCHAR(10)
+);
+
+ALTER TABLE Marksheet
+ADD constraint fk_Department Foreign KEY(Student_ID) References Students(Student_ID);
+
+
+ALTER TABLE Marksheet
+ADD constraint pk_Department_of_Student PRIMARY KEY(Student_ID,Course);
+
+SELECT Student_ID, Name, Course, Grade
+FROM Students
+NATURAL JOIN Marksheet;
